@@ -74,10 +74,10 @@ export const protestant = [
  */
 export function fromEnglish(eng: string) {
 	eng = eng.toLowerCase();
-	const numeric = eng.replace(/the|book|letter|of|Paul|to|-/g, '');
+	const numeric = eng.replace(/\b(the|book|letter|of|Paul|to)\b|-/g, '');
 	const norm = numeric
-		.replace(/\b([0-9]|ii|iii|iv|v|vi|first|second|third|fourth|fifth|sixth)\b/, '')
-		.replace(/\s+/, '');
+		.replace(/[0-9]|\b(ii|iii|iv|v|vi|first|second|third|fourth|fifth|sixth)\b/g, '')
+		.replace(/\s+/g, '')
 
 	if (norm.startsWith('gen')) return 'gen';
 	if (norm.startsWith('exo')) return 'exo';
@@ -88,7 +88,7 @@ export function fromEnglish(eng: string) {
 	if (norm.startsWith('judg') || norm == 'jdg') return 'jdg';
 	if (norm.startsWith('rut')) return 'rut';
 	if (norm.startsWith('sa')) {
-		if (includesNumber(norm, 2)) return '2sa';
+		if (includesNumber(numeric, 2)) return '2sa';
 		return '1sa';
 	}
 	if (norm.startsWith('ki') || norm.startsWith('kg')) {
@@ -112,7 +112,7 @@ export function fromEnglish(eng: string) {
 	if (norm.startsWith('ecc') || norm.startsWith('qoh')) return 'ecc';
 	if ((norm.startsWith('song') || norm == 'sng' || norm.startsWith('cant')) && !norm.includes('young')) return 'sng';
 	if (norm.startsWith('isa')) return 'isa';
-	if (norm.startsWith('jer') || !norm.includes('letter')) return 'jer';
+	if (norm.startsWith('jer') && !eng.includes('letter')) return 'jer';
 	if (norm.startsWith('lam')) return 'lam';
 	if (norm.startsWith('eze') || norm == 'ezk') return 'ezk';
 	if (norm.startsWith('dan')) {
@@ -134,7 +134,6 @@ export function fromEnglish(eng: string) {
 	if (norm.startsWith('mat')) return 'mat';
 	if (norm.startsWith('mar') || norm == 'mrk') return 'mrk';
 	if (norm.startsWith('luk')) return 'luk';
-	if (norm.startsWith('joh') || norm == 'jhn' || norm == 'jn') return 'jhn';
 	if (norm.startsWith('act')) return 'act';
 	if (norm.startsWith('rom')) return 'rom';
 	if (norm.startsWith('co')) {
@@ -149,11 +148,11 @@ export function fromEnglish(eng: string) {
 		if (includesNumber(numeric, 2)) return '2th';
 		return '1th';
 	}
+	if (norm.startsWith('tit')) return 'tit';
 	if (norm.startsWith('ti')) {
 		if (includesNumber(numeric, 2)) return '2ti';
 		return '1ti';
 	}
-	if (norm.startsWith('tit')) return 'tit';
 	if (norm.startsWith('phile') || norm == 'phm' || norm == 'phlm') return 'phm';
 	if (norm.startsWith('heb')) return 'heb';
 	if (norm.startsWith('ja') || norm == 'jas') return 'jas';
@@ -161,10 +160,11 @@ export function fromEnglish(eng: string) {
 		if (includesNumber(numeric, 2)) return '2pe';
 		return '1pe';
 	}
-	if (norm.startsWith('jo')) {
+	if (norm.startsWith('jo') || norm.startsWith('jn') || norm.startsWith('jh')) {
 		if (includesNumber(numeric, 3)) return '3jn';
 		if (includesNumber(numeric, 2)) return '2jn';
-		return '1jn';
+		if (includesNumber(numeric, 1)) return '1jn';
+		return 'jhn';
 	}
 	if (norm.startsWith('jud')) return 'jud';
 	if (norm.startsWith('rev')) return 'rev';

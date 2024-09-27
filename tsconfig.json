@@ -9,8 +9,8 @@
 		"module": "ESNext",
 		"moduleResolution": "node",
 		"esModuleInterop": true,
-		"isolatedModules": true,
-		"allowImportingTsExtensions": true
+		"isolatedModules": true
 	},
-	"include": [ "." ]
+	"include": [ "src/**/*.ts" ],
+	"exclude": [ "src/**/*.test.ts" ]
 }

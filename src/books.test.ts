@@ -1,4 +1,6 @@
 import { equal } from 'node:assert';
-import { fromEnglish } from './books.ts';
+import { fromEnglish, protestant } from './books.ts';
 
-equal(fromEnglish('1 Samuel'), '1sa');
+equal('1sa', fromEnglish('1 Samuel'));
+equal('est', fromEnglish('Esther'));
+protestant.forEach(p => equal(p, fromEnglish(p)));
