@@ -65,7 +65,7 @@ export const protestant = [
 	'3jn',
 	'jud',
 	'rev',
-];
+] as const;
 /**
  * Eagerly match an English book name to a Paratext ID.
  * List of IDs: https://ubsicap.github.io/usfm/identification/books.html
@@ -75,7 +75,9 @@ export const protestant = [
 export function fromEnglish(eng: string) {
 	eng = eng.toLowerCase();
 	const numeric = eng.replace(/the|book|letter|of|Paul|to|-/g, '');
-	const norm = numeric.replace(/\b([0-9]|ii|iii|iv|v|vi|first|second|third|fourth|fifth|sixth)\b/, '');
+	const norm = numeric
+		.replace(/\b([0-9]|ii|iii|iv|v|vi|first|second|third|fourth|fifth|sixth)\b/, '')
+		.replace(/\s+/, '');
 
 	if (norm.startsWith('gen')) return 'gen';
 	if (norm.startsWith('exo')) return 'exo';
