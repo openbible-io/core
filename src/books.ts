@@ -92,6 +92,8 @@ export function fromEnglish(eng: string) {
 		return '1sa';
 	}
 	if (norm.startsWith('ki') || norm.startsWith('kg')) {
+		if (includesNumber(numeric, 4)) return '2ch';
+		if (includesNumber(numeric, 3)) return '1ch';
 		if (includesNumber(numeric, 2)) return '2ki';
 		return '1ki';
 	}
