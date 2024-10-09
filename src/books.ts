@@ -66,6 +66,7 @@ export const protestant = [
 	'jud',
 	'rev',
 ] as const;
+
 /**
  * Eagerly match an English book name to a Paratext ID.
  * List of IDs: https://ubsicap.github.io/usfm/identification/books.html
@@ -217,6 +218,42 @@ export function fromEnglish(eng: string) {
 	throw Error(`Unknown book ${norm}`);
 }
 export type Book = ReturnType<typeof fromEnglish>;
+
+export function isNewTestament(book: Book): boolean {
+	switch (book) {
+	case 'mat':
+	case 'mrk':
+	case 'luk':
+	case 'act':
+	case 'rom':
+	case '2co':
+	case '1co':
+	case 'gal':
+	case 'eph':
+	case 'php':
+	case 'col':
+	case '2th':
+	case '1th':
+	case 'tit':
+	case '2ti':
+	case '1ti':
+	case 'phm':
+	case 'heb':
+	case 'jas':
+	case '2pe':
+	case '1pe':
+	case '3jn':
+	case '2jn':
+	case '1jn':
+	case 'jhn':
+	case 'jud':
+	case 'rev':
+	// TODO: add apocrypha
+		return true;
+	default:
+		return false;
+	}
+}
 
 function romanize(n: number) {
 	const lookup = {

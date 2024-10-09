@@ -11,4 +11,6 @@ if [[ -z $VERSION ]]; then
 	git push --tags origin master
 fi
 npm version --no-git-tag-version $VERSION
+# So do not need to run `npm view "${pkg.name}" "time[${pkg.version}]"`
+cat package.json | jq ".openbible.published = \"$(date +%Y-%m-%d)\"" > package.json
 npm publish --provenance --access public
