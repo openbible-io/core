@@ -1,4 +1,4 @@
-export const books = [
+export const all = [
 	'gen',
 	'exo',
 	'lev',
@@ -106,7 +106,7 @@ export const books = [
 * Paratext ID
 * https://ubsicap.github.io/usfm/identification/books.html)
 */
-export type Book = typeof books[number];
+export type Book = typeof all[number];
 
 /**
  * Eagerly match an English book name to an ID.
@@ -120,13 +120,16 @@ export function fromEnglish(eng: string): Book {
 		.replace(/[0-9]|\b(ii|iii|iv|v|vi|first|second|third|fourth|fifth|sixth)\b/g, '')
 		.replace(/\s+/g, '')
 
+	const found = all.find(b => b == numeric);
+	if (found) return found;
+
 	if (norm.startsWith('gen')) return 'gen';
 	if (norm.startsWith('exo')) return 'exo';
 	if (norm.startsWith('lev')) return 'lev';
 	if (norm.startsWith('num')) return 'num';
 	if (norm.startsWith('deu')) return 'deu';
 	if (norm.startsWith('jos')) return 'jos';
-	if (norm.startsWith('judg') || norm == 'jdg') return 'jdg';
+	if (norm.startsWith('judg')) return 'jdg';
 	if (norm.startsWith('rut')) return 'rut';
 	if (norm.startsWith('sa')) {
 		if (includesNumber(numeric, 2)) return '2sa';
@@ -153,17 +156,17 @@ export function fromEnglish(eng: string): Book {
 	}
 	if (norm.startsWith('pr')) return 'pro';
 	if (norm.startsWith('ecc') || norm.startsWith('qoh')) return 'ecc';
-	if ((norm.startsWith('song') || norm == 'sng' || norm.startsWith('cant')) && !norm.includes('young')) return 'sng';
+	if ((norm.startsWith('song') || norm.startsWith('cant')) && !norm.includes('young')) return 'sng';
 	if (norm.startsWith('isa')) return 'isa';
 	if (norm.startsWith('jer') && !eng.includes('letter')) return 'jer';
 	if (norm.startsWith('lam')) return 'lam';
-	if (norm.startsWith('eze') || norm == 'ezk') return 'ezk';
+	if (norm.startsWith('eze')) return 'ezk';
 	if (norm.startsWith('dan')) {
 		if (norm.includes('g')) return 'dag'; // daniel greek
 		return 'dan';
 	}
 	if (norm.startsWith('hos')) return 'hos';
-	if (norm.startsWith('joe') || norm == 'jol') return 'jol';
+	if (norm.startsWith('joe')) return 'jol';
 	if (norm.startsWith('am')) return 'amo';
 	if (norm.startsWith('oba')) return 'oba';
 	if (norm.startsWith('jon')) return 'jon';
@@ -175,7 +178,7 @@ export function fromEnglish(eng: string): Book {
 	if (norm.startsWith('zec')) return 'zec';
 	if (norm.startsWith('mal')) return 'mal';
 	if (norm.startsWith('mat')) return 'mat';
-	if (norm.startsWith('mar') || norm == 'mrk') return 'mrk';
+	if (norm.startsWith('mar')) return 'mrk';
 	if (norm.startsWith('luk')) return 'luk';
 	if (norm.startsWith('act')) return 'act';
 	if (norm.startsWith('rom')) return 'rom';
@@ -185,7 +188,7 @@ export function fromEnglish(eng: string): Book {
 	}
 	if (norm.startsWith('gal')) return 'gal';
 	if (norm.startsWith('eph')) return 'eph';
-	if (norm.startsWith('philip') || norm == 'php') return 'php';
+	if (norm.startsWith('philip')) return 'php';
 	if (norm.startsWith('co')) return 'col';
 	if (norm.startsWith('th')) {
 		if (includesNumber(numeric, 2)) return '2th';
@@ -196,9 +199,9 @@ export function fromEnglish(eng: string): Book {
 		if (includesNumber(numeric, 2)) return '2ti';
 		return '1ti';
 	}
-	if (norm.startsWith('phile') || norm == 'phm' || norm == 'phlm') return 'phm';
+	if (norm.startsWith('phile') || norm == 'phlm') return 'phm';
 	if (norm.startsWith('heb')) return 'heb';
-	if (norm.startsWith('ja') || norm == 'jas') return 'jas';
+	if (norm.startsWith('ja')) return 'jas';
 	if (norm.startsWith('pe')) {
 		if (includesNumber(numeric, 2)) return '2pe';
 		return '1pe';
@@ -214,7 +217,7 @@ export function fromEnglish(eng: string): Book {
 	// deuterocanonicals
 	if (norm.startsWith('tob')) return 'tob'; // tobit
 	if (norm.startsWith('jdt') || norm.startsWith('judi')) return 'jdt'; // judith
-	if (norm.startsWith('est') || norm == 'esg') return 'esg'; // esther greek
+	if (norm.startsWith('est')) return 'esg'; // esther greek
 	if (norm.startsWith('wis')) return 'wis'; // wisdom of solomon
 	if (norm.startsWith('sir')) return 'sir'; // sirach
 	if (norm.includes('bar')) {
