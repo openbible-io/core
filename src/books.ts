@@ -1,4 +1,4 @@
-export const all = [
+export const books = [
 	'gen',
 	'exo',
 	'lev',
@@ -106,7 +106,7 @@ export const all = [
 * Paratext ID
 * https://ubsicap.github.io/usfm/identification/books.html)
 */
-export type Book = typeof all[number];
+export type Book = typeof books[number];
 
 /**
  * Eagerly match an English book name to an ID.

@@ -1,7 +1,2 @@
-import * as books from './books.js';
-
-export type Book = books.Book;
-
-export {
-	books,
-};
+export * as canons from './canons.js';
+export * as books from './books.js';
