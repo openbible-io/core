@@ -1,4 +1,4 @@
-export const protestant = [
+export const all = [
 	'gen',
 	'exo',
 	'lev',
@@ -65,15 +65,55 @@ export const protestant = [
 	'3jn',
 	'jud',
 	'rev',
+	'tob',
+	'jdt',
+	'esg',
+	'wis',
+	'sir',
+	'bar',
+	'lje',
+	's3y',
+	'sus',
+	'bel',
+	'1ma',
+	'2ma',
+	'3ma',
+	'4ma',
+	'1es',
+	'2es',
+	'man',
+	'ps2',
+	'oda',
+	'pss',
+	'eza',
+	'5ez',
+	'6ez',
+	'dag',
+	'ps3',
+	'2ba',
+	'lba',
+	'jub',
+	'eno',
+	'1mq',
+	'2mq',
+	'3mq',
+	'rep',
+	'4ba',
+	'lao',
 ] as const;
 
 /**
- * Eagerly match an English book name to a Paratext ID.
- * List of IDs: https://ubsicap.github.io/usfm/identification/books.html
+* Paratext ID
+* https://ubsicap.github.io/usfm/identification/books.html)
+*/
+export type Book = typeof all[number];
+
+/**
+ * Eagerly match an English book name to an ID.
  *
  * @param {string} eng english book name
  */
-export function fromEnglish(eng: string) {
+export function fromEnglish(eng: string): Book {
 	eng = eng.toLowerCase();
 	const numeric = eng.replace(/\b(the|book|letter|of|Paul|to)\b|-/g, '');
 	const norm = numeric
@@ -217,7 +257,6 @@ export function fromEnglish(eng: string) {
 
 	throw Error(`Unknown book ${norm}`);
 }
-export type Book = ReturnType<typeof fromEnglish>;
 
 export function isNewTestament(book: Book): boolean {
 	switch (book) {
@@ -248,7 +287,6 @@ export function isNewTestament(book: Book): boolean {
 	case 'jhn':
 	case 'jud':
 	case 'rev':
-	// TODO: add apocrypha
 		return true;
 	default:
 		return false;
