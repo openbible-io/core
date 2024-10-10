@@ -3,4 +3,4 @@ import { fromEnglish, all } from './books.ts';
 
 equal('1sa', fromEnglish('1 Samuel'));
 equal('est', fromEnglish('Esther'));
-all.forEach(p => equal(p, fromEnglish(p)));
+Object.keys(all).forEach(p => equal(p, fromEnglish(p)));
