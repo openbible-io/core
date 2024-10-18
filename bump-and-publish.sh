@@ -15,4 +15,4 @@ npm version --no-git-tag-version $VERSION
 cat package.json | jq ".openbible.published = \"$(date +%Y-%m-%d)\"" > package.json
 pwd
 ls
-npm publish --provenance --access public
+npm publish --provenance --access public $(pwd)
