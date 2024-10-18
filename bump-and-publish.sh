@@ -1,5 +1,5 @@
 #!/bin/env bash
-set -e
+set -ex
 
 git fetch --tags
 VERSION=$(git tag --points-at HEAD)
