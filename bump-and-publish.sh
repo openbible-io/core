@@ -1,5 +1,5 @@
 #!/bin/env bash
-set -ex
+set -e
 
 git fetch --tags
 VERSION=$(git tag --points-at HEAD)
@@ -13,6 +13,4 @@ fi
 npm version --no-git-tag-version $VERSION
 # So do not need to run `npm view "${pkg.name}" "time[${pkg.version}]"`
 cat package.json | jq ".openbible.published = \"$(date +%Y-%m-%d)\"" > package.json
-pwd
-ls
 npm publish --provenance --access public $(pwd)
