@@ -1,2 +1,4 @@
-export * as canons from './canons.js';
-export * as books from './books.js';
+// @ts-ignore
+export * as canons from './canons.ts';
+// @ts-ignore
+export * as books from './books.ts';

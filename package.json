@@ -8,7 +8,7 @@
 	"description": "Common frontend and backend code.",
 	"scripts": {
 		"build": "tsc",
-		"test": "node --experimental-strip-types ./src/*.test.ts"
+		"test": "node --experimental-strip-types --test ./src/*.test.ts"
 	},
 	"engines": {
 		"node": ">= 22.7.0"
