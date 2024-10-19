@@ -1,3 +1,6 @@
+/**
+ * From Wikipedia.
+ */
 export const jewish = {
 	torah: [
 		'gen',
@@ -58,6 +61,9 @@ export const jewish = {
 	} as const,
 } as const;
 
+/**
+ * From Wikipedia.
+ */
 export const protestant = {
 	old: {
 		torah: [

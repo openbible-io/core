@@ -1,5 +1,6 @@
 {
 	"name": "@openbible/core",
+	"description": "Shared code and data for OpenBible.",
 	"exports": "./src/index.ts",
 	"fmt": {
 		"useTabs": true,
@@ -7,5 +8,11 @@
 	},
 	"imports": {
 		"@std/expect": "jsr:@std/expect@^1.0.5"
+	},
+	"publish": {
+		"exclude": [
+			".github",
+			"he-manuscript*"
+		]
 	}
 }

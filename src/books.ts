@@ -3,8 +3,13 @@ type BookDetail = {
 	from?: number;
 	to?: number;
 };
-// https://www.biblegateway.com/learn/bible-101/about-the-bible/when-was-the-bible-written/
-// TODO: https://www.biblegateway.com/learn/bible-101/who-wrote-the-bible/
+
+/**
+ * All supported Biblical books.
+ *
+ * https://www.biblegateway.com/learn/bible-101/about-the-bible/when-was-the-bible-written/
+ * TODO: https://www.biblegateway.com/learn/bible-101/who-wrote-the-bible/
+ */
 export const all = {
 	'gen': { from: -1446, to: -1406 } as BookDetail,
 	'exo': { from: -1446, to: -1406 } as BookDetail,
@@ -110,8 +115,7 @@ export const all = {
 } as const;
 
 /**
- * Paratext ID
- * https://ubsicap.github.io/usfm/identification/books.html)
+ * [Paratext ID](https://ubsicap.github.io/usfm/identification/books.html)
  */
 export type Book = keyof typeof all;
 
