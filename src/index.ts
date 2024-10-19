@@ -1,4 +1,4 @@
-/** Module */
+/** Supported canons. */
 export * as canons from './canons.ts';
-/** Module */
+/** Supported books. */
 export * as books from './books.ts';
