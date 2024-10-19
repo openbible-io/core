@@ -1,6 +1,5 @@
 {
 	"name": "@openbible/core",
-	"description": "Shared code and data for OpenBible.",
 	"exports": "./src/index.ts",
 	"fmt": {
 		"useTabs": true,

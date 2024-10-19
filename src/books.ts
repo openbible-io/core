@@ -122,7 +122,7 @@ export type Book = keyof typeof all;
 /**
  * Eagerly match an English book name to an ID.
  *
- * @param {string} eng english book name
+ * @param eng English book name
  */
 export function fromEnglish(eng: string): Book {
 	eng = eng.toLowerCase();
@@ -278,6 +278,11 @@ export function fromEnglish(eng: string): Book {
 	throw Error(`Unknown book ${norm}`);
 }
 
+/**
+ * If the book is considered written after 20 AD.
+ *
+ * @param book Book
+ */
 export function isNewTestament(book: Book): boolean {
 	switch (book) {
 		case 'mat':
