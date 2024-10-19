@@ -2,6 +2,7 @@
 set -e
 
 git fetch --tags
+git log --oneline
 VERSION=$(git tag --points-at HEAD)
 if [[ -z $VERSION ]]; then
 	VERSION=$(git tag --sort=committerdate | tail -1)
