@@ -1,6 +1,6 @@
 {
 	"name": "@openbible/core",
-	"exports": "src/index.ts",
+	"exports": "./src/index.ts",
 	"fmt": {
 		"useTabs": true,
 		"singleQuote": true
