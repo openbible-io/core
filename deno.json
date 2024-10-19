@@ -1,0 +1,11 @@
+{
+	"name": "@openbible/core",
+	"exports": "src/index.ts",
+	"fmt": {
+		"useTabs": true,
+		"singleQuote": true
+	},
+	"imports": {
+		"@std/expect": "jsr:@std/expect@^1.0.5"
+	}
+}

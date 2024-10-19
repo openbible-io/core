@@ -33,7 +33,7 @@ export const jewish = {
 			'hag',
 			'zec',
 			'mal',
-		] as const
+		] as const,
 	} as const,
 	ketuvim: {
 		poetic: [
@@ -147,6 +147,6 @@ export const protestant = {
 		] as const,
 		apocalypse: [
 			'rev',
-		] as const
+		] as const,
 	} as const,
 } as const;

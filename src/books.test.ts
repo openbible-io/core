@@ -1,10 +1,10 @@
-import { test } from 'node:test';
-import { fromEnglish, all } from './books.ts';
+import { expect } from 'jsr:@std/expect';
+import { all, fromEnglish } from './books.ts';
 
-test('tricky books', t => {
-	t.assert.equal('1sa', fromEnglish('1 Samuel'));
-	t.assert.equal('est', fromEnglish('Esther'));
+Deno.test('tricky books', () => {
+	expect(fromEnglish('1 Samuel')).toBe('1sa');
+	expect(fromEnglish('Esther')).toBe('est');
 });
-test('maps back to self', t => {
-	Object.keys(all).forEach(p => t.assert.equal(p, fromEnglish(p)));
+Deno.test('maps back to self', () => {
+	Object.keys(all).forEach((p) => expect(fromEnglish(p)).toBe(p));
 });

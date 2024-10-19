@@ -110,9 +110,9 @@ export const all = {
 } as const;
 
 /**
-* Paratext ID
-* https://ubsicap.github.io/usfm/identification/books.html)
-*/
+ * Paratext ID
+ * https://ubsicap.github.io/usfm/identification/books.html)
+ */
 export type Book = keyof typeof all;
 
 /**
@@ -124,10 +124,13 @@ export function fromEnglish(eng: string): Book {
 	eng = eng.toLowerCase();
 	const numeric = eng.replace(/\b(the|book|letter|of|Paul|to)\b|-/g, '');
 	const norm = numeric
-		.replace(/[0-9]|\b(ii|iii|iv|v|vi|first|second|third|fourth|fifth|sixth)\b/g, '')
-		.replace(/\s+/g, '')
+		.replace(
+			/[0-9]|\b(ii|iii|iv|v|vi|first|second|third|fourth|fifth|sixth)\b/g,
+			'',
+		)
+		.replace(/\s+/g, '');
 
-	const found = (Object.keys(all) as Book[]).find(b => b == numeric);
+	const found = (Object.keys(all) as Book[]).find((b) => b == numeric);
 	if (found) return found;
 
 	if (norm.startsWith('gen')) return 'gen';
@@ -163,7 +166,10 @@ export function fromEnglish(eng: string): Book {
 	}
 	if (norm.startsWith('pr')) return 'pro';
 	if (norm.startsWith('ecc') || norm.startsWith('qoh')) return 'ecc';
-	if ((norm.startsWith('song') || norm.startsWith('cant')) && !norm.includes('young')) return 'sng';
+	if (
+		(norm.startsWith('song') || norm.startsWith('cant')) &&
+		!norm.includes('young')
+	) return 'sng';
 	if (norm.startsWith('isa')) return 'isa';
 	if (norm.startsWith('jer') && !eng.includes('letter')) return 'jer';
 	if (norm.startsWith('lam')) return 'lam';
@@ -270,36 +276,36 @@ export function fromEnglish(eng: string): Book {
 
 export function isNewTestament(book: Book): boolean {
 	switch (book) {
-	case 'mat':
-	case 'mrk':
-	case 'luk':
-	case 'act':
-	case 'rom':
-	case '2co':
-	case '1co':
-	case 'gal':
-	case 'eph':
-	case 'php':
-	case 'col':
-	case '2th':
-	case '1th':
-	case 'tit':
-	case '2ti':
-	case '1ti':
-	case 'phm':
-	case 'heb':
-	case 'jas':
-	case '2pe':
-	case '1pe':
-	case '3jn':
-	case '2jn':
-	case '1jn':
-	case 'jhn':
-	case 'jud':
-	case 'rev':
-		return true;
-	default:
-		return false;
+		case 'mat':
+		case 'mrk':
+		case 'luk':
+		case 'act':
+		case 'rom':
+		case '2co':
+		case '1co':
+		case 'gal':
+		case 'eph':
+		case 'php':
+		case 'col':
+		case '2th':
+		case '1th':
+		case 'tit':
+		case '2ti':
+		case '1ti':
+		case 'phm':
+		case 'heb':
+		case 'jas':
+		case '2pe':
+		case '1pe':
+		case '3jn':
+		case '2jn':
+		case '1jn':
+		case 'jhn':
+		case 'jud':
+		case 'rev':
+			return true;
+		default:
+			return false;
 	}
 }
 
