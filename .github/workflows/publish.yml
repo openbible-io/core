@@ -16,6 +16,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          fetch-tags: true
       - uses: denoland/setup-deno@v2
         with:
           deno-version: v2.x
