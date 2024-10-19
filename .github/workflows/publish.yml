@@ -21,4 +21,4 @@ jobs:
           deno-version: v2.x
       - run: deno install --frozen
       - run: deno test
-      - uses: openbible-io/bump-and-publish@v0.0.1
+      - uses: openbible-io/bump-and-publish@v0.0.2
