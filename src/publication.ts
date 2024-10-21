@@ -19,8 +19,9 @@ export interface Publication {
 	writings?: Writing[];
 }
 
-/* Publication data. */
+/** Publication data. */
 export type Writing = Bible;
+/** Preface and books */
 export type Bible = {
 	type: 'bible';
 	preface?: Html;

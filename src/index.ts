@@ -1,9 +1,13 @@
-import * as canons from './canons.ts';
-import * as books from './books.ts';
-/** Arbitrarily nested. */
-export { canons };
-/** Of Bible. */
-export { books };
+/**
+* Canon data
+* @namespace
+*/
+export * as canons from './canons.ts';
+/**
+* Books data
+* @namespace
+*/
+export * as books from './books.ts';
 export * from './lang.ts';
 export * from './publication.ts';
 export * from './author.ts';
