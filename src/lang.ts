@@ -9,4 +9,5 @@ export const langs = [
 	'heb',
 	'grc',
 ] as const;
+/** Convenience type */
 export type Lang = typeof langs[number];
