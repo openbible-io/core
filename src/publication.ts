@@ -15,10 +15,10 @@ export interface Publication {
 	license: string;
 	licenseUrl?: string;
 	authors?: Author[];
-	data?: PublicationData;
+	writings?: Writing[];
 }
 
-export type PublicationData = Bible;
+export type Writing = Bible;
 export type Bible = {
 	type: 'bible';
 	preface?: Html;
