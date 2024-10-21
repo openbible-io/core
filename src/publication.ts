@@ -1,6 +1,6 @@
 import type { Author } from './author.ts';
 import type { Lang } from './lang.ts';
-import type { Book, BookDetail } from './books.ts';
+import type { Book } from './books.ts';
 
 /** Publication metadata. */
 export interface Publication {
@@ -18,15 +18,13 @@ export interface Publication {
 	writings?: Writing[];
 }
 
+/* Publication data. */
 export type Writing = Bible;
 export type Bible = {
 	type: 'bible';
 	preface?: Html;
 	books: {
-		[book in Book]?: {
-			detail?: BookDetail;
-			html: Html;
-		};
+		[book in Book]?: Html;
 	};
 };
 /** Raw snippet not necessarily to spec. */
