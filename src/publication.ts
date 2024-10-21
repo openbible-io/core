@@ -1,6 +1,7 @@
 import type { Author } from './author.ts';
 import type { Lang } from './lang.ts';
 import type { Book } from './books.ts';
+import type { Ast } from '@openbible/bconv';
 
 /** Publication metadata. */
 export interface Publication {
@@ -24,7 +25,7 @@ export type Bible = {
 	type: 'bible';
 	preface?: Html;
 	books: {
-		[book in Book]?: Html;
+		[book in Book]?: Ast;
 	};
 };
 /** Raw snippet not necessarily to spec. */

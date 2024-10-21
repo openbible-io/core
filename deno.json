@@ -6,6 +6,7 @@
 		"singleQuote": true
 	},
 	"imports": {
+		"@openbible/bconv": "jsr:@openbible/bconv@^0.1.6",
 		"@std/expect": "jsr:@std/expect@^1.0.5"
 	},
 	"publish": {
