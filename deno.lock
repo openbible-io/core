@@ -2,20 +2,12 @@
   "version": "3",
   "packages": {
     "specifiers": {
-      "jsr:@openbible/bconv@^0.1.6": "jsr:@openbible/bconv@0.1.6",
       "jsr:@std/assert@^1.0.6": "jsr:@std/assert@1.0.6",
       "jsr:@std/expect": "jsr:@std/expect@1.0.5",
       "jsr:@std/expect@^1.0.5": "jsr:@std/expect@1.0.5",
-      "jsr:@std/internal@^1.0.4": "jsr:@std/internal@1.0.4",
-      "npm:chalk@^5.3.0": "npm:chalk@5.3.0"
+      "jsr:@std/internal@^1.0.4": "jsr:@std/internal@1.0.4"
     },
     "jsr": {
-      "@openbible/bconv@0.1.6": {
-        "integrity": "0534ab4744489c83175ea3f3e934b2cbf90932fee2a1cabd14b6305bd3ba7b55",
-        "dependencies": [
-          "npm:chalk@^5.3.0"
-        ]
-      },
       "@std/assert@1.0.6": {
         "integrity": "1904c05806a25d94fe791d6d883b685c9e2dcd60e4f9fc30f4fc5cf010c72207",
         "dependencies": [
@@ -32,18 +24,12 @@
       "@std/internal@1.0.4": {
         "integrity": "62e8e4911527e5e4f307741a795c0b0a9e6958d0b3790716ae71ce085f755422"
       }
-    },
-    "npm": {
-      "chalk@5.3.0": {
-        "integrity": "sha512-dLitG79d+GV1Nb/VYcCDFivJeK1hiukt9QjRNVOsUtTy1rR1YJsmpGGTZ3qJos+uw7WmWF4wUwBd9jxjocFC2w==",
-        "dependencies": {}
-      }
     }
   },
   "remote": {},
   "workspace": {
     "dependencies": [
-      "jsr:@openbible/bconv@^0.1.6",
+      "jsr:@openbible/bconv@^0.1.7",
       "jsr:@std/expect@^1.0.5"
     ]
   }
