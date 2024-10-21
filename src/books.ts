@@ -1,4 +1,4 @@
-type BookDetail = {
+export type BookDetail = {
 	/** Approximate year book was written */
 	from?: number;
 	to?: number;
@@ -278,11 +278,7 @@ export function fromEnglish(eng: string): Book {
 	throw Error(`Unknown book ${norm}`);
 }
 
-/**
- * If the book is considered written after 20 AD.
- *
- * @param book Book
- */
+/** If the book is considered written after 20 AD. */
 export function isNewTestament(book: Book): boolean {
 	switch (book) {
 		case 'mat':
