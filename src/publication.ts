@@ -23,7 +23,7 @@ export type Publication = {
 };
 
 export type Toc = {
-	[k in Book]: {
+	[k in Book]?: {
 		name: string,
 		nChapters: number,
 	}
