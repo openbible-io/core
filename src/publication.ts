@@ -1,10 +1,9 @@
 import type { Author } from './author.ts';
 import type { Lang } from './lang.ts';
 import type { Book } from './books.ts';
-import type { Ast } from '@openbible/bconv';
 
 /** Publication metadata. */
-export interface Publication {
+export type Publication = {
 	title: string;
 	lang: Lang;
 	downloadUrl: string;
@@ -16,18 +15,21 @@ export interface Publication {
 	license: string;
 	licenseUrl?: string;
 	authors?: Author[];
-	writings?: Writing[];
-}
-
-/** Publication data. */
-export type Writing = Bible;
-/** Preface and books */
-export type Bible = {
-	type: 'bible';
-	preface?: Html;
-	books: {
-		[book in Book]?: Ast;
-	};
+	/** HTML */
+	preface?: string;
+	/** Table of Contents */
+	toc: Toc;
+	audio?: { [id: string]: Audio };
 };
-/** Raw snippet not necessarily to spec. */
-export type Html = string;
+
+export type Toc = {
+	[k in Book]: {
+		name: string,
+		nChapters: number,
+	}
+};
+
+export type Audio = Omit<
+	Publication,
+	'title' | 'lang' | 'isbn' | 'preface' | 'audio'
+>;
