@@ -24,12 +24,14 @@ export type Publication = {
 
 export type Toc = {
 	[k in Book]?: {
-		name: string,
-		nChapters: number,
-	}
+		name: string;
+		nChapters: number;
+	};
 };
 
-export interface Audio extends Omit<Publication, 'title' | 'lang' | 'isbn' | 'preface' | 'audio' | 'toc'> {
+export interface Audio
+	extends
+		Omit<Publication, 'title' | 'lang' | 'isbn' | 'preface' | 'audio' | 'toc'> {
 	/** Omission means that is same as parent publication. */
 	toc?: Toc;
-};
+}
