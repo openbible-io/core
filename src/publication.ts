@@ -1,6 +1,6 @@
-import type { Author } from './author.ts';
-import type { Lang } from './lang.ts';
-import type { Book } from './books.ts';
+import type { Author } from "./author.ts";
+import type { Lang } from "./lang.ts";
+import type { Book } from "./books.ts";
 
 /** Publication metadata. */
 export type Publication = {
@@ -33,7 +33,7 @@ export type Toc = {
 
 export interface Audio
 	extends
-		Omit<Publication, 'title' | 'lang' | 'isbn' | 'preface' | 'audio' | 'toc'> {
+		Omit<Publication, "title" | "lang" | "isbn" | "preface" | "audio" | "toc"> {
 	/** Omission means that is same as parent publication. */
 	toc?: Toc;
 	/** In seconds */

@@ -4,8 +4,8 @@
 [![jsr version](https://img.shields.io/jsr/v/@openbible/core.svg?style=for-the-badge)](https://jsr.io/@openbible/core)
 
 ```ts
-import { books } from '@openbible/core';
+import { books } from "@openbible/core";
 
-console.log(books.fromEnglish('1 sam'));
+console.log(books.fromEnglish("1 sam"));
 // '1sa'
 ```
