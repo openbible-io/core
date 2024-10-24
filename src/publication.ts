@@ -19,6 +19,8 @@ export type Publication = {
 	preface?: string;
 	/** Table of Contents */
 	toc: Toc;
+	/** Uncompressed bytes */
+	size: number;
 	audio?: { [id: string]: Audio };
 };
 
