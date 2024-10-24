@@ -34,4 +34,6 @@ export interface Audio
 		Omit<Publication, 'title' | 'lang' | 'isbn' | 'preface' | 'audio' | 'toc'> {
 	/** Omission means that is same as parent publication. */
 	toc?: Toc;
+	/** In seconds */
+	runtime?: number;
 }
