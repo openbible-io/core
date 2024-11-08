@@ -26,7 +26,6 @@
   },
   "workspace": {
     "dependencies": [
-      "jsr:@openbible/bconv@~0.1.9",
       "jsr:@std/expect@^1.0.5"
     ]
   }
