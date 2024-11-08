@@ -5,7 +5,7 @@
 		"useTabs": true
 	},
 	"imports": {
-		"@openbible/bconv": "jsr:@openbible/bconv@^0.1.8",
+		"@openbible/bconv": "jsr:@openbible/bconv@^0.1.9",
 		"@std/expect": "jsr:@std/expect@^1.0.5"
 	},
 	"publish": {
