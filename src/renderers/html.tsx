@@ -5,7 +5,12 @@ import Home from "./html/Home.tsx";
 import { join } from "node:path";
 import type { ComponentChildren } from "preact";
 import BookIndex from "./html/BookIndex.tsx";
-import { type Ast, type HeadingLevel, renderers } from "@openbible/bconv";
+import {
+	type Ast,
+	type HeadingLevel,
+	renderers,
+	type TextAttributes,
+} from "@openbible/bconv";
 import ChapterNav from "./ChapterNav.tsx";
 import translations, { type Translation } from "../../i18n.ts";
 import { walkSync } from "@std/fs/walk";
@@ -16,15 +21,29 @@ class ChapterVisitor extends renderers.Html {
 	chapterHtml: string[] = [];
 	curChapter = -1;
 
+	/** For interlinear */
+	source?: Ast;
+	sourceIndex: { [key: string]: string } = {};
+
+	bookHtmlInterlinear: string[] = [];
+	chapterHtmlInterlinear: string[] = [];
+
 	constructor(
 		public pub: Publication,
 		public bookId: BookId,
 		locale: Translation,
-		public onFlush: (chapter: number, chapterHtml: string[]) => void = () => {},
+		// TODO: better control sinks
+		public onFlush: (
+			chapter: number,
+			chapterHtml: string[],
+			chapterHtmlInterlinear: string[],
+		) => void = () => {},
 	) {
 		super((s) => {
 			this.bookHtml.push(s);
 			this.chapterHtml.push(s);
+			this.bookHtmlInterlinear.push(s);
+			this.chapterHtmlInterlinear.push(s);
 		}, (c) => locale.chapter.replace("%n", c.toString()));
 	}
 
@@ -38,20 +57,24 @@ class ChapterVisitor extends renderers.Html {
 			),
 		);
 		if (this.inParagraph) {
-			this.endTag('p');
+			this.endTag("p");
 			this.inParagraph = false;
 		}
-		this.onFlush(this.curChapter, this.chapterHtml);
+		this.onFlush(
+			this.curChapter,
+			this.chapterHtml,
+			this.chapterHtmlInterlinear,
+		);
 		this.chapterHtml = [this.bookName];
 	}
 
 	override book() {}
 
-	override heading(level: HeadingLevel, text: string) {
+	override heading(level: HeadingLevel, text: string, i: number) {
 		if (level == 1) {
 			this.bookName = `<h1>${text}</h1>`;
 		}
-		super.heading(level, text);
+		super.heading(level, text, i);
 	}
 
 	override chapter(n: number) {
@@ -77,9 +100,29 @@ class ChapterVisitor extends renderers.Html {
 		this.endTag("h2");
 	}
 
-	override visit(ast: Ast) {
+	override visit(ast: Ast, source?: Ast) {
+		if (source) {
+			this.source = source;
+			this.sourceIndex = {};
+			for (let i = 0; i < source.length; i++) {
+				const n = source[i];
+				if (typeof n == "string" || !("attributes" in n)) continue;
+				if (n.attributes?.index !== undefined) {
+					this.sourceIndex[n.attributes.index] = n.text;
+				}
+			}
+		}
+
 		super.visit(ast);
 		this.flushChapter();
+	}
+
+	override text(text: string, _attributes: TextAttributes, i: number) {
+		const html = `<span source="${this.sourceIndex[i]}">${text}</span>`;
+		this.chapterHtmlInterlinear.push(html);
+		this.bookHtmlInterlinear.push(html);
+		this.chapterHtml.push(text);
+		this.bookHtml.push(text);
 	}
 }
 
@@ -161,29 +204,49 @@ export class HtmlRenderer {
 		});
 
 		const all = Object.entries(this.pub.books).reduce((acc, [id, book]) => {
-			if (!book.ast || id == "pre") return acc;
+			if (!book.data || id == "pre") return acc;
 
 			const visitor = new ChapterVisitor(
 				this.pub,
 				id as BookId,
 				this.translation,
-				(chapter, chapterHtml) =>
+				(chapter, chapterHtml, chapterHtmlInterlinear) => {
 					this.writeHtml(
 						join(id, chapter.toString()),
 						this.renderHtml(chapterHtml),
-					),
+					);
+
+					if (chapterHtmlInterlinear) {
+						this.writeHtml(
+							join(id, chapter.toString(), "interlinear"),
+							this.renderHtml(chapterHtmlInterlinear),
+						);
+					}
+				},
 			);
-			visitor.visit(book.ast);
+			visitor.visit(book.data.ast, book.data.source);
 			this.writeHtml(
 				join(id, "all"),
 				this.renderHtml(visitor.bookHtml),
 			);
+			if (visitor.bookHtmlInterlinear.length) {
+				this.writeHtml(
+					join(id, "interlinear"),
+					this.renderHtml(visitor.bookHtmlInterlinear),
+				);
+			}
 
-			acc.push(...visitor.bookHtml);
+			acc.normal.push(...visitor.bookHtml);
+			acc.interlinear.push(...visitor.bookHtmlInterlinear);
+
 			return acc;
-		}, [] as string[]);
+		}, {
+			normal: [] as string[],
+			interlinear: [] as string[],
+		});
 
-		this.writeHtml("all", this.renderHtml(all));
+		this.writeHtml("all", this.renderHtml(all.normal));
+		this.writeHtml("interlinear", this.renderHtml(all.interlinear));
 	}
 }
 

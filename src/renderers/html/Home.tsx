@@ -65,10 +65,10 @@ export default (props: Props) => (
 				))}
 			</ul>
 		</p>
-		{props.books.pre?.ast && (
+		{props.books.pre?.data && (
 			<>
 				<h2>{props.translation.preface}</h2>
-				<Ast ast={props.books.pre.ast} />
+				<Ast ast={props.books.pre.data.ast} />
 			</>
 		)}
 	</>

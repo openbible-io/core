@@ -1,7 +1,7 @@
 {
   "version": "4",
   "specifiers": {
-    "jsr:@openbible/bconv@~0.1.16": "0.1.16",
+    "jsr:@openbible/bconv@~0.1.24": "0.1.24",
     "jsr:@std/assert@^1.0.6": "1.0.6",
     "jsr:@std/expect@*": "1.0.5",
     "jsr:@std/expect@^1.0.5": "1.0.5",
@@ -14,8 +14,8 @@
     "npm:preact@^10.25.4": "10.25.4"
   },
   "jsr": {
-    "@openbible/bconv@0.1.16": {
-      "integrity": "75a0b1c7b0d6ba2baafdc4e37b086a356cf4bfba8fed0561bdd0f71789c9dd38",
+    "@openbible/bconv@0.1.24": {
+      "integrity": "c1a5e3a8bc5f0bdd2a9b51bb5dd45ccae3592ee658e665880da1aa452a1c5635",
       "dependencies": [
         "npm:chalk"
       ]
@@ -71,7 +71,7 @@
   },
   "workspace": {
     "dependencies": [
-      "jsr:@openbible/bconv@~0.1.16",
+      "jsr:@openbible/bconv@~0.1.24",
       "jsr:@std/expect@^1.0.5",
       "jsr:@std/fs@^1.0.10",
       "npm:preact-render-to-string@^6.5.13",

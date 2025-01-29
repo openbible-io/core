@@ -8,7 +8,10 @@ export type AudioBookId = string;
 export interface Book {
 	name: string;
 	nChapters: number;
-	ast?: Ast;
+	data?: {
+		ast: Ast;
+		source?: Ast;
+	}
 }
 
 export type AudioBook = { seconds: number };

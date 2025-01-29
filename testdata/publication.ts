@@ -22,42 +22,63 @@ export default {
 		pre: {
 			name: "Preface",
 			nChapters: 1,
-			ast: [
-				{
-					"text": "Hope you like my publication!",
-				},
-			]
+			data: {
+				ast: [
+					{
+						"text": "Hope you like my publication!",
+					},
+				],
+			},
 		},
 		gen: {
 			name: "Genesis",
 			nChapters: 2,
-			ast: [
-				{ "text": "" },
-				{ "book": "GEN" },
-				{ "level": 1, "text": "Genesis\r\n" },
-				{ "chapter": 1 },
-				{ "level": 3, "text": "The Creation\r\n" },
-				{ "break": "" },
-				{ "paragraph": "" },
-				{ "text": "\n" },
-				{ "verse": 1 },
-				{
-					"text":
-						"In the beginning God created the heavens and the earth. \r\n",
-					"footnote": "OMG!!!"
-				},
-				{ "break": "" },
-				{ "paragraph": "" },
-				{ "text": "\n" },
-				{ "chapter": 2 },
-				{ "break": "" },
-				{ "paragraph": "" },
-				{ "verse": 1 },
-				{
-					"text":
-						"Now the serpent was more crafty than any beast of the field that the LORD God had made. And he said to the woman, “Did God really say, ‘You must not eat from any tree in the garden?’”",
-				},
-			],
+			data: {
+				ast: [
+					{ "text": "" },
+					{ "book": "GEN" },
+					{ "level": 1, "text": "Genesis\r\n" },
+					{ "chapter": 1 },
+					{ "level": 3, "text": "The Creation\r\n" },
+					{ "break": "" },
+					{ "paragraph": "" },
+					"\n",
+					{ "verse": 1 },
+					" In the beginning ",
+					" God ",
+					" created ",
+					" the heavens ",
+					" and ",
+					" the earth.",
+				],
+				source: [
+					{
+						text: "בְּרֵאשִׁ֖ית",
+						attributes: { index: 9 }
+					},
+					{
+						text: "בָּרָ֣א",
+						attributes: { index: 11 }
+					},
+					{
+						text: "אֱלֹהִ֑ים",
+						attributes: { index: 10 }
+					},
+					"אֵ֥ת",
+					{
+						text: "הַשָּׁמַ֖יִם",
+						attributes: { index: 12 }
+					},
+					{
+						text: "וְאֵ֥ת",
+						attributes: { index: 13 }
+					},
+					{
+						text: "הָאָֽרֶץ׃",
+						attributes: { index: 14 }
+					}
+				]
+			},
 		},
 	},
 	audio: {
