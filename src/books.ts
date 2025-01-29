@@ -11,7 +11,7 @@ export type BookDetail = {
  *
  * https://www.biblegateway.com/learn/bible-101/about-the-bible/when-was-the-bible-written/
  */
-export const all = {
+export const bookDetails = {
 	"gen": { from: "-1446", to: "-1406" } as BookDetail,
 	"exo": { from: "-1446", to: "-1406" } as BookDetail,
 	"lev": { from: "-1446", to: "-1406" } as BookDetail,
@@ -118,14 +118,14 @@ export const all = {
 /**
  * [Paratext ID](https://ubsicap.github.io/usfm/identification/books.html)
  */
-export type Book = keyof typeof all;
+export type BookId = keyof typeof bookDetails;
 
 /**
  * Eagerly match an English book name to an ID.
  *
  * @param eng English book name
  */
-export function fromEnglish(eng: string): Book {
+export function fromEnglish(eng: string): BookId {
 	eng = eng.toLowerCase();
 	const numeric = eng.replace(/\b(the|book|letter|of|Paul|to)\b|-/g, "");
 	const norm = numeric
@@ -135,7 +135,7 @@ export function fromEnglish(eng: string): Book {
 		)
 		.replace(/\s+/g, "");
 
-	const found = (Object.keys(all) as Book[]).find((b) => b == numeric);
+	const found = (Object.keys(bookDetails) as BookId[]).find((b) => b == numeric);
 	if (found) return found;
 
 	if (norm.startsWith("gen")) return "gen";
@@ -280,7 +280,7 @@ export function fromEnglish(eng: string): Book {
 }
 
 /** If the book is considered written after 20 AD. */
-export function isNewTestament(book: Book): boolean {
+export function isNewTestament(book: BookId): boolean {
 	switch (book) {
 		case "mat":
 		case "mrk":

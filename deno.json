@@ -5,13 +5,19 @@
 		"useTabs": true
 	},
 	"imports": {
-		"@openbible/bconv": "jsr:@openbible/bconv@^0.1.8",
-		"@std/expect": "jsr:@std/expect@^1.0.5"
+		"@openbible/bconv": "jsr:@openbible/bconv@^0.1.16",
+		"@std/expect": "jsr:@std/expect@^1.0.5",
+		"@std/fs": "jsr:@std/fs@^1.0.10",
+		"preact": "npm:preact@^10.25.4",
+		"preact-render-to-string": "npm:preact-render-to-string@^6.5.13"
+	},
+	"compilerOptions": {
+		"jsx": "react-jsx",
+		"jsxImportSource": "preact"
 	},
 	"publish": {
 		"exclude": [
-			".github",
-			"he-manuscript*"
+			".github"
 		]
 	},
 	"version": "0.0.0"
