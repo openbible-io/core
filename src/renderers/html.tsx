@@ -21,33 +21,23 @@ class ChapterVisitor extends renderers.Html {
 	chapterHtml: string[] = [];
 	curChapter = -1;
 
-	/** For interlinear */
-	source?: Ast;
-	sourceIndex: { [key: string]: string } = {};
-
-	bookHtmlInterlinear: string[] = [];
-	chapterHtmlInterlinear: string[] = [];
-
 	constructor(
+		locale: Translation,
 		public pub: Publication,
 		public bookId: BookId,
-		locale: Translation,
-		// TODO: better control sinks
-		public onFlush: (
-			chapter: number,
-			chapterHtml: string[],
-			chapterHtmlInterlinear: string[],
-		) => void = () => {},
+		public onFlush: (chapter: number, chapterHtml: string[]) => void = () => {},
 	) {
 		super((s) => {
 			this.bookHtml.push(s);
 			this.chapterHtml.push(s);
-			this.bookHtmlInterlinear.push(s);
-			this.chapterHtmlInterlinear.push(s);
 		}, (c) => locale.chapter.replace("%n", c.toString()));
 	}
 
 	flushChapter() {
+		if (this.inParagraph) {
+			this.endTag("p");
+			this.inParagraph = false;
+		}
 		this.chapterHtml.push(
 			preactRender(
 				<ChapterNav
@@ -56,15 +46,7 @@ class ChapterVisitor extends renderers.Html {
 				/>,
 			),
 		);
-		if (this.inParagraph) {
-			this.endTag("p");
-			this.inParagraph = false;
-		}
-		this.onFlush(
-			this.curChapter,
-			this.chapterHtml,
-			this.chapterHtmlInterlinear,
-		);
+		this.onFlush(this.curChapter, this.chapterHtml);
 		this.chapterHtml = [this.bookName];
 	}
 
@@ -100,6 +82,19 @@ class ChapterVisitor extends renderers.Html {
 		this.endTag("h2");
 	}
 
+	override visit(ast: Ast) {
+		super.visit(ast);
+		this.flushChapter();
+	}
+}
+
+class InterlinearVisitor extends ChapterVisitor {
+	/** For interlinear */
+	source?: Ast;
+	sourceIndex: { [key: string]: string } = {};
+	bookHtmlInterlinear: string[] = [];
+	chapterHtmlInterlinear: string[] = [];
+
 	override visit(ast: Ast, source?: Ast) {
 		if (source) {
 			this.source = source;
@@ -112,17 +107,22 @@ class ChapterVisitor extends renderers.Html {
 				}
 			}
 		}
-
 		super.visit(ast);
-		this.flushChapter();
 	}
 
-	override text(text: string, _attributes: TextAttributes, i: number) {
-		const html = `<span source="${this.sourceIndex[i]}">${text}</span>`;
-		this.chapterHtmlInterlinear.push(html);
-		this.bookHtmlInterlinear.push(html);
-		this.chapterHtml.push(text);
-		this.bookHtml.push(text);
+	override text(text: string, attributes: TextAttributes, i: number) {
+		super.startTag("ul", true);
+		super.startTag("li", true)
+		super.text(text, attributes, i);
+		super.endTag("li");
+		super.startTag("li", true)
+		this.write(this.sourceIndex[i] ?? "");
+		super.endTag("li")
+		super.endTag("ul");
+	}
+
+	override paragraph(_class: string | undefined, i: number) {
+		super.paragraph("flex", i);
 	}
 }
 
@@ -207,37 +207,42 @@ export class HtmlRenderer {
 			if (!book.data || id == "pre") return acc;
 
 			const visitor = new ChapterVisitor(
+				this.translation,
 				this.pub,
 				id as BookId,
-				this.translation,
-				(chapter, chapterHtml, chapterHtmlInterlinear) => {
+				(chapter, chapterHtml) => {
 					this.writeHtml(
 						join(id, chapter.toString()),
 						this.renderHtml(chapterHtml),
 					);
-
-					if (chapterHtmlInterlinear) {
-						this.writeHtml(
-							join(id, chapter.toString(), "interlinear"),
-							this.renderHtml(chapterHtmlInterlinear),
-						);
-					}
 				},
 			);
-			visitor.visit(book.data.ast, book.data.source);
+			visitor.visit(book.data.ast);
 			this.writeHtml(
 				join(id, "all"),
 				this.renderHtml(visitor.bookHtml),
 			);
-			if (visitor.bookHtmlInterlinear.length) {
+			acc.normal.push(...visitor.bookHtml);
+
+			if (book.data.source) {
+				const interlinerVisitor = new InterlinearVisitor(
+					this.translation,
+					this.pub,
+					id as BookId,
+					(chapter, chapterHtml) => {
+						this.writeHtml(
+							join(id, chapter.toString(), "interlinear"),
+							this.renderHtml(chapterHtml),
+						);
+					},
+				);
+				interlinerVisitor.visit(book.data.ast, book.data.source);
 				this.writeHtml(
 					join(id, "interlinear"),
-					this.renderHtml(visitor.bookHtmlInterlinear),
+					this.renderHtml(interlinerVisitor.bookHtml),
 				);
+				acc.interlinear.push(...interlinerVisitor.bookHtml);
 			}
-
-			acc.normal.push(...visitor.bookHtml);
-			acc.interlinear.push(...visitor.bookHtmlInterlinear);
 
 			return acc;
 		}, {

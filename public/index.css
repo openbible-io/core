@@ -122,6 +122,10 @@ a {
 	color: inherit;
 }
 
+.flex {
+	display: flex;
+}
+
 @media (prefers-color-scheme: dark) {
 	body {
 		color: white;
