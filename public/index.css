@@ -64,7 +64,7 @@ h6 {
 	margin-bottom: 0.1em;
 }
 
-p {
+p, table {
 	margin-top: 1em;
 	margin-bottom: 1em;
 }
@@ -89,17 +89,17 @@ h2:has(audio) {
 
 ul {
 	list-style: none;
-}
-nav ul {
 	display: flex;
 	flex-wrap: wrap;
-}
-nav ul li {
-	padding-right: 0.5em;
+	gap: 1rem;
 }
 
 header {
 	padding: 1em;
+}
+
+tr td:first-child {
+	padding-right: 2rem;
 }
 
 nav {
@@ -113,6 +113,9 @@ nav {
 .chapterNav a {
 	text-decoration: none;
 }
+.mb-1 {
+	margin-bottom: 1em;
+}
 
 sup {
 	margin-right: 0.1em;
@@ -124,6 +127,8 @@ a {
 
 .flex {
 	display: flex;
+	flex-wrap: wrap;
+	gap: 1rem;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -134,5 +139,5 @@ a {
 }
 
 @media print {
-	details, audio { visibility: hidden; }
+	details, audio, nav { visibility: hidden; }
 }

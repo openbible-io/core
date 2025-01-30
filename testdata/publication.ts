@@ -21,7 +21,6 @@ export default {
 	books: {
 		pre: {
 			name: "Preface",
-			nChapters: 1,
 			data: {
 				ast: [
 					{
@@ -32,7 +31,6 @@ export default {
 		},
 		gen: {
 			name: "Genesis",
-			nChapters: 2,
 			data: {
 				ast: [
 					/* 0 */ { "text": "" },

@@ -4,7 +4,6 @@ import type { BookId, Publication } from "../index.ts";
 import Home from "./html/Home.tsx";
 import { join } from "node:path";
 import type { ComponentChildren } from "preact";
-import BookIndex from "./html/BookIndex.tsx";
 import {
 	type Ast,
 	type HeadingLevel,
@@ -20,6 +19,7 @@ class ChapterVisitor extends renderers.Html {
 	bookHtml: string[] = [];
 	chapterHtml: string[] = [];
 	curChapter = -1;
+	chapters: number[] = [];
 
 	constructor(
 		locale: Translation,
@@ -42,7 +42,7 @@ class ChapterVisitor extends renderers.Html {
 			preactRender(
 				<ChapterNav
 					chapter={this.curChapter}
-					nChapters={this.pub.books[this.bookId]!.nChapters}
+					chapters={this.chapters}
 				/>,
 			),
 		);
@@ -84,16 +84,26 @@ class ChapterVisitor extends renderers.Html {
 
 	override visit(ast: Ast) {
 		super.visit(ast);
+		this.chapters = ast
+			.filter((n) => typeof n == "object" && "chapter" in n)
+			.map((n) => n.chapter);
 		this.flushChapter();
 	}
 }
 
 class InterlinearVisitor extends ChapterVisitor {
-	/** For interlinear */
 	source?: Ast;
 	sourceIndex: { [key: string]: string } = {};
 	bookHtmlInterlinear: string[] = [];
 	chapterHtmlInterlinear: string[] = [];
+
+	override startParagraph() {
+		super.startTag("div", false, { class: "flex" });
+	}
+
+	override endParagraph() {
+		super.endTag("div");
+	}
 
 	override visit(ast: Ast, source?: Ast) {
 		if (source) {
@@ -111,13 +121,14 @@ class InterlinearVisitor extends ChapterVisitor {
 	}
 
 	override text(text: string, attributes: TextAttributes, i: number) {
+		if (!text.trim()) return;
 		super.startTag("ul", true);
-		super.startTag("li", true)
+		super.startTag("li", true);
 		super.text(text, attributes, i);
 		super.endTag("li");
-		super.startTag("li", true)
+		super.startTag("li", true);
 		this.write(this.sourceIndex[i] ?? "");
-		super.endTag("li")
+		super.endTag("li");
 		super.endTag("ul");
 	}
 
@@ -191,18 +202,8 @@ export class HtmlRenderer {
 	write() {
 		if (this.opts.pubDir) copyDirContents(this.opts.pubDir, this.opts.outDir);
 
-		this.writeHtml(
-			"",
-			this.renderJsx(<Home translation={this.translation} {...this.pub} />),
-		);
-
-		Object.entries(this.pub.books).forEach(([id, book]) => {
-			this.writeHtml(
-				id,
-				this.renderJsx(<BookIndex translation={this.translation} {...book} />),
-			);
-		});
-
+		const bookChapters: { [id: string]: { name: string; chapters: number[] } } =
+			{};
 		const all = Object.entries(this.pub.books).reduce((acc, [id, book]) => {
 			if (!book.data || id == "pre") return acc;
 
@@ -219,10 +220,15 @@ export class HtmlRenderer {
 			);
 			visitor.visit(book.data.ast);
 			this.writeHtml(
-				join(id, "all"),
+				id,
 				this.renderHtml(visitor.bookHtml),
 			);
 			acc.normal.push(...visitor.bookHtml);
+
+			bookChapters[id] = {
+				name: book.name,
+				chapters: visitor.chapters,
+			};
 
 			if (book.data.source) {
 				const interlinerVisitor = new InterlinearVisitor(
@@ -249,6 +255,11 @@ export class HtmlRenderer {
 			normal: [] as string[],
 			interlinear: [] as string[],
 		});
+
+		this.writeHtml(
+			"",
+			this.renderJsx(<Home translation={this.translation} bookChapters={bookChapters} {...this.pub} />),
+		);
 
 		this.writeHtml("all", this.renderHtml(all.normal));
 		this.writeHtml("interlinear", this.renderHtml(all.interlinear));

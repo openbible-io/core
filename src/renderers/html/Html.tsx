@@ -20,17 +20,7 @@ export default (props: HtmlProps) => (
 		</head>
 		<body>
 			<nav>
-				<details>
-					<summary>{props.translation.bookList}</summary>
-					<ul>
-						{Object.entries(props.pub.books)
-							.map(([id, { name }]) => (
-								<li>
-									<a href={`/${id == 'pre' ? '' : id}`}>{name}</a>
-								</li>
-							))}
-					</ul>
-				</details>
+				<a href="/">{props.translation.home}</a>
 			</nav>
 			{props.children}
 		</body>

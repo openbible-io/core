@@ -4,13 +4,48 @@ import Ast from "./Ast.tsx";
 
 interface Props extends Publication {
 	translation: Translation;
+	bookChapters: {
+		[id: string]: {
+			name: string;
+			chapters: number[];
+		};
+	};
 }
 
 export default (props: Props) => (
 	<>
 		<h1>{props.title}</h1>
-		<p>
-			<table>
+		<h2>{props.translation.books}</h2>
+		<table>
+			<tbody>
+				{Object.entries(props.bookChapters)
+					.filter(([id]) => id != "pre")
+					.map(([id, { name, chapters }]) => (
+						<tr>
+							<td>
+								<a href={`/${id}`}>{name}</a>
+							</td>
+							<td>
+								<ul>
+									{chapters.map((i) => (
+										<li>
+											<a href={`/${id}/${i}`}>{i}</a>
+										</li>
+									))}
+								</ul>
+							</td>
+						</tr>
+					))}
+				<tr>
+					<td>
+						<a href="/all">{props.translation.all}</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<h2>{props.translation.details}</h2>
+		<table>
+			<tbody>
 				<tr>
 					<td>{props.translation.download}</td>
 					<td>
@@ -52,19 +87,17 @@ export default (props: Props) => (
 						{"text" in props.license && props.license.text}
 					</td>
 				</tr>
-			</table>
-		</p>
+			</tbody>
+		</table>
 		<h2>{props.translation.authors}</h2>
-		<p>
-			<ul>
-				{(props.authors ?? []).map((a: Author) => (
-					<li>
-						{a.contributions?.join(", ")} <a href={a.url}>{a.name}</a>{" "}
-						{a.qualifications?.join(", ")}
-					</li>
-				))}
-			</ul>
-		</p>
+		<ul class="mb-1">
+			{(props.authors ?? []).map((a: Author) => (
+				<li>
+					{a.contributions?.join(", ")} <a href={a.url}>{a.name}</a>{" "}
+					{a.qualifications?.join(", ")}
+				</li>
+			))}
+		</ul>
 		{props.books.pre?.data && (
 			<>
 				<h2>{props.translation.preface}</h2>
