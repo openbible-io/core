@@ -1,6 +1,6 @@
 import { render as preactRender } from "preact-render-to-string";
 import Html from "./html/Html.tsx";
-import type { BookId, Publication } from "../index.ts";
+import { type BookId, type Publication } from "../index.ts";
 import Home from "./html/Home.tsx";
 import { dirname, join } from "node:path";
 import type { ComponentChildren } from "preact";
@@ -13,18 +13,7 @@ import {
 import ChapterNav from "./ChapterNav.tsx";
 import translations, { type Translation } from "../../i18n.ts";
 import { walkSync } from "@std/fs/walk";
-
-type BookChapters = {
-	[id: string]: { name: string; chapters: number[] };
-};
-export type Version = {
-	html: string[];
-	bookChapters: BookChapters;
-};
-export type Versions = {
-	"": Version;
-	interlinear: Version;
-};
+import { fromEnglish, isNewTestament } from "../books.ts";
 
 class ChapterVisitor extends renderers.Html {
 	bookName: string = "";
@@ -81,7 +70,7 @@ class ChapterVisitor extends renderers.Html {
 
 		this.startTag("h2");
 		this.write(this.chapterFn(n));
-		if (this.pub.audio) {
+		if (this.pub.audio && !(this instanceof ReverseInterlinearVisitor)) {
 			Object.values(this.pub.audio).forEach((audioBook) => {
 				if (!audioBook || !(this.bookId in audioBook.books)) return;
 
@@ -110,7 +99,7 @@ class InterlinearVisitor extends ChapterVisitor {
 	chapterHtmlInterlinear: string[] = [];
 
 	override startParagraph() {
-		super.startTag("div", false, { class: "flex" });
+		super.startTag("div", false, { class: "interlinear" });
 	}
 
 	override endParagraph() {
@@ -118,15 +107,14 @@ class InterlinearVisitor extends ChapterVisitor {
 	}
 
 	override visit(ast: Ast, source?: Ast) {
-		if (source) {
-			this.source = source;
-			this.sourceIndex = {};
-			for (let i = 0; i < source.length; i++) {
-				const n = source[i];
-				if (typeof n == "string" || !("attributes" in n)) continue;
-				if (n.attributes?.index !== undefined) {
-					this.sourceIndex[n.attributes.index] = n.text;
-				}
+		if (!source) throw new Error("Interlinear requires source");
+		this.source = source;
+		this.sourceIndex = {};
+		for (let i = 0; i < source.length; i++) {
+			const n = source[i];
+			if (typeof n == "string" || !("attributes" in n)) continue;
+			if (n.attributes?.index !== undefined) {
+				this.sourceIndex[n.attributes.index] = n.text;
 			}
 		}
 		super.visit(ast);
@@ -148,6 +136,54 @@ class InterlinearVisitor extends ChapterVisitor {
 		super.paragraph("flex", i);
 	}
 }
+
+class ReverseInterlinearVisitor extends InterlinearVisitor {
+	ast?: Ast;
+
+	override startParagraph() {
+		let class_ = "interlinear";
+		if (!isNewTestament(fromEnglish(this.bookId))) class_ += " reverse";
+		super.startTag("div", false, { class: class_ });
+	}
+
+	override visit(ast: Ast, source?: Ast) {
+		if (!source) throw new Error("Reverse interlinear requires source");
+		this.ast = ast;
+		ChapterVisitor.prototype.visit.call(this, source);
+	}
+
+	override text(text: string, attributes: TextAttributes, i: number) {
+		if (!text.trim()) return;
+		super.startTag("ul", true);
+		super.startTag("li", true);
+		super.text(text, attributes, i);
+		super.endTag("li");
+		const matching = this.ast && this.ast[attributes.index];
+		if (matching) {
+			super.startTag("li", true);
+			this.visitNode(matching, attributes.index);
+			super.endTag("li");
+		}
+		super.endTag("ul");
+	}
+}
+
+const visitors = {
+	"": ChapterVisitor,
+	"interlinear": InterlinearVisitor,
+	"reverseInterlinear": ReverseInterlinearVisitor,
+};
+type BookChapters = {
+	[id: string]: { name: string; chapters: number[] };
+};
+export type Version = {
+	html: string[];
+	bookChapters: BookChapters;
+};
+export type Versions = {
+	[k in keyof typeof visitors]: Version;
+};
+type Visitor = typeof visitors[keyof typeof visitors];
 
 function copyDirContents(from: string, to: string) {
 	for (const dirEntry of walkSync(from)) {
@@ -219,44 +255,44 @@ export class HtmlRenderer {
 			(acc, [id, book]) => {
 				if (!book.data || id == "pre") return acc;
 
-				const recordVisit = (
-					Visitor:
-						| typeof ChapterVisitor
-						| typeof InterlinearVisitor,
-				) => {
-					const vType = Visitor == ChapterVisitor ? "" : "interlinear";
-
-					const visitor = new Visitor(
+				const recordVisit = (vId: keyof Versions, VisitorClass: Visitor) => {
+					const visitor = new VisitorClass(
 						this.translation,
 						this.pub,
 						id as BookId,
 						(chapter: number, chapterHtml: string[]) => {
 							this.writeHtml(
-								join(id, chapter.toString(), vType),
+								join(vId, id, chapter.toString()),
 								this.renderHtml(chapterHtml),
 							);
 						},
 					);
-					visitor.visit(book.data!.ast, book.data!.source);
-					this.writeHtml(join(id, vType), this.renderHtml(visitor.bookHtml));
-					acc[vType].html.push(...visitor.bookHtml);
 
-					acc[vType].bookChapters[id] = {
+					visitor.visit(book.data!.ast, book.data!.source);
+					this.writeHtml(join(vId, id), this.renderHtml(visitor.bookHtml));
+					acc[vId].html.push(...visitor.bookHtml);
+
+					acc[vId].bookChapters[id] = {
 						name: book.name,
 						chapters: visitor.chapters,
 					};
 				};
 
-				recordVisit(ChapterVisitor);
-				recordVisit(InterlinearVisitor);
+				Object.entries(visitors).forEach(([id, Visitor]) => {
+					recordVisit(id as keyof Versions, Visitor);
+				});
 
 				return acc;
 			},
-			{
-				"": { html: [], bookChapters: {} } as Version,
-				interlinear: { html: [], bookChapters: {} } as Version,
-			},
+			Object.keys(visitors).reduce((acc, id) => ({
+				...acc,
+				[id]: { html: [], bookChapters: {} } as Version,
+			}), {} as { [k in keyof typeof visitors]: Version }),
 		);
+
+		Object.entries(versions).forEach(([id, v]) => {
+			this.writeHtml(join(id, "all"), this.renderHtml(v.html));
+		});
 
 		this.writeHtml(
 			"",
@@ -268,10 +304,6 @@ export class HtmlRenderer {
 				/>,
 			),
 		);
-
-		Object.entries(versions).forEach(([id, v]) => {
-			this.writeHtml(join("all", id), this.renderHtml(v.html));
-		});
 	}
 }
 

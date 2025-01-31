@@ -14,38 +14,41 @@ const Version = (
 		version: Version;
 		translation: Translation;
 	},
-) => (
-	<>
-		<h2>{translation[id == "" ? "books" : id]}</h2>
-		<table>
-			<tbody>
-				{Object.entries(version.bookChapters)
-					.filter(([id]) => id != "pre")
-					.map(([id, { name, chapters }]) => (
-						<tr>
-							<td>
-								<a href={`/${id}`}>{name}</a>
-							</td>
-							<td>
-								<ul>
-									{chapters.map((i) => (
-										<li>
-											<a href={`/${id}/${i}`}>{i}</a>
-										</li>
-									))}
-								</ul>
-							</td>
-						</tr>
-					))}
-				<tr>
-					<td>
-						<a href={`/all/${id}`}>{translation.all}</a>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</>
-);
+) => {
+	const prefix = id == "" ? "" : `/${id}`;
+
+	return (
+		<>
+			<h2>{translation[id == "" ? "books" : id]}</h2>
+			<table>
+				<tbody>
+					{Object.entries(version.bookChapters)
+						.map(([bookId, { name, chapters }]) => (
+							<tr>
+								<td>
+									<a href={`${prefix}/${bookId}`}>{name}</a>
+								</td>
+								<td>
+									<ul class="flex flex-wrap gap-1">
+										{chapters.map((i) => (
+											<li>
+												<a href={`${prefix}/${bookId}/${i}`}>{i}</a>
+											</li>
+										))}
+									</ul>
+								</td>
+							</tr>
+						))}
+					<tr>
+						<td>
+							<a href={`${prefix}/all`}>{translation.all}</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</>
+	);
+};
 
 export default (props: Props) => (
 	<>

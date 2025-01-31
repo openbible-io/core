@@ -50,6 +50,9 @@ export default {
 					/* 14 */ " the earth.",
 				],
 				source: [
+					{ "chapter": 1 },
+					{ "paragraph": "" },
+					{ "verse": 1 },
 					{
 						text: "בְּרֵאשִׁ֖ית",
 						attributes: { index: 9 },
