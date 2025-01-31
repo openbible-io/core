@@ -48,6 +48,8 @@ export default {
 					/* 12 */ " the heavens ",
 					/* 13 */ " and ",
 					/* 14 */ " the earth.",
+					/* 15 */ { "verse": 2 },
+					/* 16 */ " And the earth ",
 				],
 				source: [
 					{ "chapter": 1 },
@@ -77,6 +79,11 @@ export default {
 					{
 						text: "הָאָֽרֶץ׃",
 						attributes: { index: 14 },
+					},
+					{ "verse": 2 },
+					{
+						text: "וְהָאָ֗רֶץ",
+						attributes: { index: 16 },
 					},
 				],
 			},

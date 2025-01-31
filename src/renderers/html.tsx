@@ -168,10 +168,66 @@ class ReverseInterlinearVisitor extends InterlinearVisitor {
 	}
 }
 
+class VerseVisitor extends ChapterVisitor {
+	source?: Ast;
+	sourceIndex = 0;
+	verseN = -1;
+
+	override paragraph() {}
+	override heading() {}
+	override chapter(n: number) {
+		super.chapter(n);
+		this.startTag("table");
+		this.startTag("tbody");
+	}
+
+	override flushChapter() {
+		this.endTag("tbody");
+		this.endTag("table");
+		super.flushChapter();
+	}
+
+	override verse(n: number, _i: number) {
+		if (this.verseN != n) {
+			if (this.verseN != -1) {
+				this.endTag("td");
+				this.endTag("tr");
+			}
+			this.verseN = n;
+			this.startTag("tr");
+			this.startTag("td");
+			while (true) {
+				const node = this.source![this.sourceIndex++];
+				const isObj = typeof node == "object";
+				if (!node || (isObj && "verse" in node && node.verse != n)) {
+					break;
+				}
+				if (node && !(isObj && ("chapter" in node || "verse" in node))) {
+					this.visitNode(node, this.sourceIndex);
+				}
+			}
+			this.endTag("td");
+			this.startTag("td");
+			this.startTag("sup", true);
+			this.write(n.toString());
+			this.endTag("sup");
+			this.endTag("td");
+			this.startTag("td");
+		}
+	}
+
+	override visit(ast: Ast, source?: Ast) {
+		if (!source) throw new Error("Interlinear requires source");
+		this.source = source;
+		super.visit(ast);
+	}
+}
+
 const visitors = {
 	"": ChapterVisitor,
 	"interlinear": InterlinearVisitor,
 	"reverseInterlinear": ReverseInterlinearVisitor,
+	"verseByVerse": VerseVisitor,
 };
 type BookChapters = {
 	[id: string]: { name: string; chapters: number[] };
