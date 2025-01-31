@@ -10,7 +10,7 @@ export interface Book {
 	data?: {
 		ast: Ast;
 		source?: Ast;
-	}
+	};
 }
 
 export type AudioBook = { seconds: number };

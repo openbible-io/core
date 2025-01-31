@@ -139,5 +139,7 @@ a {
 }
 
 @media print {
-	details, audio, nav { visibility: hidden; }
+	details, audio, nav {
+		visibility: hidden;
+	}
 }

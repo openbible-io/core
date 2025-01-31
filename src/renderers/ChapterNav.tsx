@@ -1,6 +1,6 @@
 export default (props: { chapter: number; chapters: number[] }) => {
 	const isFirst = props.chapter == props.chapters[0];
-	const isLast =  props.chapter == props.chapters[props.chapters.length - 1];
+	const isLast = props.chapter == props.chapters[props.chapters.length - 1];
 
 	return (
 		<nav class="chapterNav">

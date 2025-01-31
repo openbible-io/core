@@ -9,5 +9,8 @@
 	"books": "Books",
 	"home": "Home",
 	"details": "Details",
-	"all": "All"
+	"all": "All",
+	"interlinear": "Interlinear",
+	"reverse": "Reverse interlinear",
+	"vbv": "Verse by verse"
 }

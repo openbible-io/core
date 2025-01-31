@@ -52,30 +52,30 @@ export default {
 				source: [
 					{
 						text: "בְּרֵאשִׁ֖ית",
-						attributes: { index: 9 }
+						attributes: { index: 9 },
 					},
 					{
 						text: "בָּרָ֣א",
-						attributes: { index: 11 }
+						attributes: { index: 11 },
 					},
 					{
 						text: "אֱלֹהִ֑ים",
-						attributes: { index: 10 }
+						attributes: { index: 10 },
 					},
 					"אֵ֥ת",
 					{
 						text: "הַשָּׁמַ֖יִם",
-						attributes: { index: 12 }
+						attributes: { index: 12 },
 					},
 					{
 						text: "וְאֵ֥ת",
-						attributes: { index: 13 }
+						attributes: { index: 13 },
 					},
 					{
 						text: "הָאָֽרֶץ׃",
-						attributes: { index: 14 }
-					}
-				]
+						attributes: { index: 14 },
+					},
+				],
 			},
 		},
 	},

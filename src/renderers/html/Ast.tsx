@@ -6,4 +6,4 @@ export default (props: { ast: Ast }) => {
 	renderer.visit(props.ast);
 
 	return <main dangerouslySetInnerHTML={{ __html: html.join("") }} />;
-}
+};

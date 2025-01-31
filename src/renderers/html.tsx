@@ -2,7 +2,7 @@ import { render as preactRender } from "preact-render-to-string";
 import Html from "./html/Html.tsx";
 import type { BookId, Publication } from "../index.ts";
 import Home from "./html/Home.tsx";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import type { ComponentChildren } from "preact";
 import {
 	type Ast,
@@ -13,6 +13,18 @@ import {
 import ChapterNav from "./ChapterNav.tsx";
 import translations, { type Translation } from "../../i18n.ts";
 import { walkSync } from "@std/fs/walk";
+
+type BookChapters = {
+	[id: string]: { name: string; chapters: number[] };
+};
+export type Version = {
+	html: string[];
+	bookChapters: BookChapters;
+};
+export type Versions = {
+	"": Version;
+	interlinear: Version;
+};
 
 class ChapterVisitor extends renderers.Html {
 	bookName: string = "";
@@ -190,79 +202,76 @@ export class HtmlRenderer {
 		);
 	}
 
-	writeHtml(path: string, text: string) {
-		const outDir = join(this.opts.outDir, path);
-		Deno.mkdirSync(outDir, { recursive: true });
+	writeHtml(path: string, text: string, isIndex: boolean = true) {
+		let out = join(this.opts.outDir, path);
+		if (isIndex) out = join(out, "index");
+		out += ".html";
 
-		Deno.writeTextFileSync(join(outDir, "index.html"), text, {
-			create: true,
-		});
+		Deno.mkdirSync(dirname(out), { recursive: true });
+		Deno.writeTextFileSync(out, text, { create: true });
 	}
 
 	write() {
 		if (this.opts.pubDir) copyDirContents(this.opts.pubDir, this.opts.outDir);
+		this.writeHtml("404", this.renderJsx(<h1>404</h1>), false);
 
-		const bookChapters: { [id: string]: { name: string; chapters: number[] } } =
-			{};
-		const all = Object.entries(this.pub.books).reduce((acc, [id, book]) => {
-			if (!book.data || id == "pre") return acc;
+		const versions: Versions = Object.entries(this.pub.books).reduce(
+			(acc, [id, book]) => {
+				if (!book.data || id == "pre") return acc;
 
-			const visitor = new ChapterVisitor(
-				this.translation,
-				this.pub,
-				id as BookId,
-				(chapter, chapterHtml) => {
-					this.writeHtml(
-						join(id, chapter.toString()),
-						this.renderHtml(chapterHtml),
+				const recordVisit = (
+					Visitor:
+						| typeof ChapterVisitor
+						| typeof InterlinearVisitor,
+				) => {
+					const vType = Visitor == ChapterVisitor ? "" : "interlinear";
+
+					const visitor = new Visitor(
+						this.translation,
+						this.pub,
+						id as BookId,
+						(chapter: number, chapterHtml: string[]) => {
+							this.writeHtml(
+								join(id, chapter.toString(), vType),
+								this.renderHtml(chapterHtml),
+							);
+						},
 					);
-				},
-			);
-			visitor.visit(book.data.ast);
-			this.writeHtml(
-				id,
-				this.renderHtml(visitor.bookHtml),
-			);
-			acc.normal.push(...visitor.bookHtml);
+					visitor.visit(book.data!.ast, book.data!.source);
+					this.writeHtml(join(id, vType), this.renderHtml(visitor.bookHtml));
+					acc[vType].html.push(...visitor.bookHtml);
 
-			bookChapters[id] = {
-				name: book.name,
-				chapters: visitor.chapters,
-			};
+					acc[vType].bookChapters[id] = {
+						name: book.name,
+						chapters: visitor.chapters,
+					};
+				};
 
-			if (book.data.source) {
-				const interlinerVisitor = new InterlinearVisitor(
-					this.translation,
-					this.pub,
-					id as BookId,
-					(chapter, chapterHtml) => {
-						this.writeHtml(
-							join(id, chapter.toString(), "interlinear"),
-							this.renderHtml(chapterHtml),
-						);
-					},
-				);
-				interlinerVisitor.visit(book.data.ast, book.data.source);
-				this.writeHtml(
-					join(id, "interlinear"),
-					this.renderHtml(interlinerVisitor.bookHtml),
-				);
-				acc.interlinear.push(...interlinerVisitor.bookHtml);
-			}
+				recordVisit(ChapterVisitor);
+				recordVisit(InterlinearVisitor);
 
-			return acc;
-		}, {
-			normal: [] as string[],
-			interlinear: [] as string[],
-		});
+				return acc;
+			},
+			{
+				"": { html: [], bookChapters: {} } as Version,
+				interlinear: { html: [], bookChapters: {} } as Version,
+			},
+		);
 
 		this.writeHtml(
 			"",
-			this.renderJsx(<Home translation={this.translation} bookChapters={bookChapters} {...this.pub} />),
+			this.renderJsx(
+				<Home
+					translation={this.translation}
+					versions={versions}
+					{...this.pub}
+				/>,
+			),
 		);
 
-		this.writeHtml("all", this.renderHtml(all.normal));
-		this.writeHtml("interlinear", this.renderHtml(all.interlinear));
+		Object.entries(versions).forEach(([id, v]) => {
+			this.writeHtml(join("all", id), this.renderHtml(v.html));
+		});
 	}
 }
 

@@ -1,24 +1,25 @@
 import type { Translation } from "../../../i18n.ts";
 import type { Author, Publication } from "../../index.ts";
+import type { Version, Versions } from "../html.tsx";
 import Ast from "./Ast.tsx";
 
 interface Props extends Publication {
 	translation: Translation;
-	bookChapters: {
-		[id: string]: {
-			name: string;
-			chapters: number[];
-		};
-	};
+	versions: Versions;
 }
 
-export default (props: Props) => (
+const Version = (
+	{ id, version, translation }: {
+		id: keyof Versions;
+		version: Version;
+		translation: Translation;
+	},
+) => (
 	<>
-		<h1>{props.title}</h1>
-		<h2>{props.translation.books}</h2>
+		<h2>{translation[id == "" ? "books" : id]}</h2>
 		<table>
 			<tbody>
-				{Object.entries(props.bookChapters)
+				{Object.entries(version.bookChapters)
 					.filter(([id]) => id != "pre")
 					.map(([id, { name, chapters }]) => (
 						<tr>
@@ -38,11 +39,24 @@ export default (props: Props) => (
 					))}
 				<tr>
 					<td>
-						<a href="/all">{props.translation.all}</a>
+						<a href={`/all/${id}`}>{translation.all}</a>
 					</td>
 				</tr>
 			</tbody>
 		</table>
+	</>
+);
+
+export default (props: Props) => (
+	<>
+		<h1>{props.title}</h1>
+		{Object.entries(props.versions).map(([id, version]) => (
+			<Version
+				id={id as keyof Versions}
+				version={version}
+				translation={props.translation}
+			/>
+		))}
 		<h2>{props.translation.details}</h2>
 		<table>
 			<tbody>

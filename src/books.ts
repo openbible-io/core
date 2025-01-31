@@ -135,7 +135,9 @@ export function fromEnglish(eng: string): BookId {
 		)
 		.replace(/\s+/g, "");
 
-	const found = (Object.keys(bookDetails) as BookId[]).find((b) => b == numeric);
+	const found = (Object.keys(bookDetails) as BookId[]).find((b) =>
+		b == numeric
+	);
 	if (found) return found;
 
 	if (norm.startsWith("gen")) return "gen";
