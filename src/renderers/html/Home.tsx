@@ -1,4 +1,4 @@
-import type { Translation } from "../../../i18n.ts";
+import type { Translation } from "../../i18n.ts";
 import type { Author, Publication } from "../../index.ts";
 import type { Version, Versions } from "../html.tsx";
 import Ast from "./Ast.tsx";

@@ -1,10 +1,14 @@
 {
 	"name": "@openbible/core",
 	"exports": "./src/index.ts",
+	"tasks": {
+		"dev": "deno -A ./build/watch.ts"
+	},
 	"fmt": {
 		"useTabs": true
 	},
 	"imports": {
+		"@deno-library/progress": "jsr:@deno-library/progress@^1.5.1",
 		"@openbible/bconv": "jsr:@openbible/bconv@^0.1.26",
 		"@std/expect": "jsr:@std/expect@^1.0.5",
 		"@std/fs": "jsr:@std/fs@^1.0.10",

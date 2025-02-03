@@ -1,6 +1,6 @@
 import type { ComponentChildren } from "preact";
 import type { Publication } from "../../publication.ts";
-import type { Translation } from "../../../i18n.ts";
+import type { Translation } from "../../i18n.ts";
 
 export interface HtmlProps {
 	pub: Publication;

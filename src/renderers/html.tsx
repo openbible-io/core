@@ -1,6 +1,6 @@
 import { render as preactRender } from "preact-render-to-string";
 import Html from "./html/Html.tsx";
-import { type BookId, type Publication } from "../index.ts";
+import type { BookId, Publication } from "../index.ts";
 import Home from "./html/Home.tsx";
 import { dirname, join } from "node:path";
 import type { ComponentChildren } from "preact";
@@ -11,7 +11,7 @@ import {
 	type TextAttributes,
 } from "@openbible/bconv";
 import ChapterNav from "./ChapterNav.tsx";
-import translations, { type Translation } from "../../i18n.ts";
+import translations, { type Translation } from "../i18n.ts";
 import { walkSync } from "@std/fs/walk";
 import { fromEnglish, isNewTestament } from "../books.ts";
 
@@ -263,7 +263,7 @@ export class HtmlRenderer {
 	constructor(public pub: Publication, opts?: Partial<Options>) {
 		this.opts = {
 			outDir: opts?.outDir ?? "dist",
-			pubDir: opts?.pubDir ?? "public",
+			pubDir: opts?.pubDir ?? "static",
 			favicon: opts?.favicon ?? "/favicon.svg",
 			stylesheet: opts?.stylesheet ?? "/index.css",
 			locale: opts?.locale ?? "en",
