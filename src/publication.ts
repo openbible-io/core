@@ -30,6 +30,7 @@ export interface Audio extends Work {
 	books: {
 		[book in BookId]?: {
 			seconds: number;
+			bytes: number;
 		};
 	};
 	/** %b = book id, %c = chapter */
