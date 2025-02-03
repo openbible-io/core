@@ -115,10 +115,10 @@ export default (props: Props) => (
 				</li>
 			))}
 		</ul>
-		{props.books.pre?.data && (
+		{props.books.frt?.data && (
 			<>
-				<h2>{props.translation.preface}</h2>
-				<Ast ast={props.books.pre.data.ast} />
+				<h2>{props.books.frt.name}</h2>
+				<Ast ast={props.books.frt.data.ast} />
 			</>
 		)}
 	</>

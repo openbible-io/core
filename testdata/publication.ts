@@ -19,7 +19,7 @@ export default {
 		"super cool edition": 1234567890123,
 	},
 	books: {
-		pre: {
+		frt: {
 			name: "Preface",
 			data: {
 				ast: [

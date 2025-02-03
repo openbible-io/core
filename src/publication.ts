@@ -1,19 +1,18 @@
 import type { Author } from "./author.ts";
-import type { BookId as BibleBook } from "./books.ts";
+import type { BookId } from "./books.ts";
 import type { Ast } from "@openbible/bconv";
 
-export type BookId = BibleBook | "pre";
+/** Uniquely identify speaker + music. */
 export type AudioBookId = string;
-
+/** Will be used for Table of Contents and rendering. */
 export interface Book {
+	/** In language of publication. */
 	name: string;
 	data?: {
 		ast: Ast;
 		source?: Ast;
 	};
 }
-
-export type AudioBook = { seconds: number };
 
 interface Work {
 	downloadUrl: string;
@@ -25,12 +24,19 @@ interface Work {
 	isbns?: { [edition: string]: number };
 }
 
+/** A `Work` with per-book audio info. */
 export interface Audio extends Work {
-	books: { [book in BookId]?: AudioBook };
+	/** Metadata for books that have audio. */
+	books: {
+		[book in BookId]?: {
+			seconds: number;
+		};
+	};
 	/** %b = book id, %c = chapter */
 	url: string;
 }
 
+/** Copyrightable text. */
 export interface Publication extends Work {
 	/** Short string, usually 3 uppercase chars. */
 	id: string;

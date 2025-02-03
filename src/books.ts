@@ -116,16 +116,25 @@ export const bookDetails = {
 } as const;
 
 /**
- * [Paratext ID](https://ubsicap.github.io/usfm/identification/books.html)
+ * [Lowercase Paratext ID](https://ubsicap.github.io/usfm/identification/books.html)
  */
-export type BookId = keyof typeof bookDetails;
+export type BookId =
+	| keyof typeof bookDetails
+	| "frt"
+	| "bak"
+	| "oth"
+	| "int"
+	| "cnc"
+	| "glo"
+	| "tdx"
+	| "ndx";
 
 /**
  * Eagerly match an English book name to an ID.
  *
  * @param eng English book name
  */
-export function fromEnglish(eng: string): BookId {
+export function bookFromEnglish(eng: string): BookId {
 	eng = eng.toLowerCase();
 	const numeric = eng.replace(/\b(the|book|letter|of|Paul|to)\b|-/g, "");
 	const norm = numeric

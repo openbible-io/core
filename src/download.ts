@@ -7,8 +7,11 @@ const client = Deno.createHttpClient({
 	http1: true,
 });
 
+/**
+ * Download a file to a path with a progress bar.
+ */
 export async function downloadFile(url: string, path: string) {
-	console.log("downloading", url);
+	console.log(url);
 	const file = await Deno.open(path, { write: true, create: true });
 	const resp = await fetch(url, { client });
 

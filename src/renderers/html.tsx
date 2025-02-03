@@ -13,7 +13,7 @@ import {
 import ChapterNav from "./ChapterNav.tsx";
 import translations, { type Translation } from "../i18n.ts";
 import { walkSync } from "@std/fs/walk";
-import { fromEnglish, isNewTestament } from "../books.ts";
+import { bookDetails, bookFromEnglish, isNewTestament } from "../books.ts";
 
 class ChapterVisitor extends renderers.Html {
 	bookName: string = "";
@@ -142,7 +142,7 @@ class ReverseInterlinearVisitor extends InterlinearVisitor {
 
 	override startParagraph() {
 		let class_ = "interlinear";
-		if (!isNewTestament(fromEnglish(this.bookId))) class_ += " reverse";
+		if (!isNewTestament(bookFromEnglish(this.bookId))) class_ += " reverse";
 		super.startTag("div", false, { class: class_ });
 	}
 
@@ -309,7 +309,7 @@ export class HtmlRenderer {
 
 		const versions: Versions = Object.entries(this.pub.books).reduce(
 			(acc, [id, book]) => {
-				if (!book.data || id == "pre") return acc;
+				if (!book.data || !(id in bookDetails)) return acc;
 
 				const recordVisit = (vId: keyof Versions, VisitorClass: Visitor) => {
 					const visitor = new VisitorClass(
