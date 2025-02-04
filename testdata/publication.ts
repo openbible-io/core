@@ -1,6 +1,6 @@
 import type { Publication } from "../src/publication.ts";
 
-export default {
+const pub: Publication = {
 	id: "TST",
 	title: "Test Publication",
 	lang: "en",
@@ -94,9 +94,11 @@ export default {
 			downloadUrl: "https://openbible.io/raspy",
 			license: { spdx: "CC0-1.0" },
 			books: {
-				gen: { seconds: 11 },
+				gen: { seconds: 11, bytes: 1000 },
 			},
 			url: "https://openbible.io/audio/raspy/%b/%c.webm",
 		},
 	},
-} as Publication;
+};
+
+export default pub;
