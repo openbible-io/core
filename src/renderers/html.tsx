@@ -363,7 +363,7 @@ export class HtmlRenderer {
 	}
 }
 
-export default function renderHtml(pub: Publication, opts?: Partial<Options>) {
+export function writeHtml(pub: Publication, opts?: Partial<Options>) {
 	const renderer = new HtmlRenderer(pub, opts);
 	renderer.write();
 }

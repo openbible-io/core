@@ -1,4 +1,4 @@
-import renderHtml from "./html.tsx";
+import { writeHtml } from "./html.tsx";
 import publication from "../../testdata/publication.ts";
 
-renderHtml(publication);
+writeHtml(publication);
