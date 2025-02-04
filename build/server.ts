@@ -7,7 +7,7 @@ import { FancyAnsi } from "fancy-ansi";
 const ansi = new FancyAnsi();
 
 const liveReload = Deno.readTextFileSync(
-	join(import.meta.dirname!, "liveReload.js"),
+	import.meta.resolve("liveReload.js").replace("file://", ""),
 );
 
 type WatcherMessage = { type: "change" } | {

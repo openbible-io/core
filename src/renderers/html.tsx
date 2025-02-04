@@ -263,7 +263,8 @@ export class HtmlRenderer {
 	constructor(public pub: Publication, opts?: Partial<Options>) {
 		this.opts = {
 			outDir: opts?.outDir ?? "dist",
-			pubDir: opts?.pubDir ?? join(import.meta.dirname!, "../../static"),
+			pubDir: opts?.pubDir ??
+				import.meta.resolve("../../static").replace("file://", ""),
 			favicon: opts?.favicon ?? "/favicon.svg",
 			stylesheet: opts?.stylesheet ?? "/index.css",
 			locale: opts?.locale ?? "en",
