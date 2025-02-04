@@ -286,7 +286,7 @@ export class HtmlRenderer {
 		);
 	}
 
-	renderHtml(html: string[]) {
+	renderHtml(html: string[]): string {
 		return this.renderJsx(
 			<main
 				dangerouslySetInnerHTML={{ __html: html.join("") }}
